@@ -25,7 +25,7 @@ class AdminProfileWindow(QWidget):
         self.statistics_button = QPushButton('Посмотреть Статистику', self)
 
         # Кнопка "Назад"
-        self.back_button = QPushButton('Назад', self)
+        self.back_button = QPushButton('Выход', self)
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
