@@ -13,13 +13,14 @@ class AdminProfileWindow(QWidget):
 
         self.label = QLabel("Роль: Администратор", self)
         self.permissions_label = QLabel(
-            "Права:\n- Добавление студентов\n- Добавление преподавателей\n- Добавление групп\n- Управление оценками\n- Просмотр статистики", self
+            "Права:\n- Добавление студентов\n- Добавление преподавателей\n- Добавление групп\n- Управление оценками\n- Добавление предметов\n- Просмотр статистики", self
         )
 
         # Кнопки для перехода в другие окна
         self.add_student_button = QPushButton('Добавить Студента', self)
         self.add_teacher_button = QPushButton('Добавить Преподавателя', self)
         self.add_group_button = QPushButton('Добавить Группу', self)
+        self.add_sub_button = QPushButton('Добавить предмет', self)
         self.add_grade_button = QPushButton('Добавить Оценку', self)
         self.people_button = QPushButton('Посмотреть студентов и преподавателей', self)
         self.statistics_button = QPushButton('Посмотреть Статистику', self)
@@ -34,6 +35,7 @@ class AdminProfileWindow(QWidget):
         layout.addWidget(self.add_teacher_button)
         layout.addWidget(self.add_group_button)
         layout.addWidget(self.add_grade_button)
+        layout.addWidget(self.add_sub_button)
         layout.addWidget(self.people_button)
         layout.addWidget(self.statistics_button)
         layout.addWidget(self.back_button)
@@ -45,6 +47,7 @@ class AdminProfileWindow(QWidget):
         self.add_teacher_button.clicked.connect(self.open_add_teacher)
         self.add_group_button.clicked.connect(self.open_add_group)
         self.add_grade_button.clicked.connect(self.open_add_grade)
+        self.add_sub_button.clicked.connect(self.open_add_sub)
         self.people_button.clicked.connect(self.open_people)
         self.statistics_button.clicked.connect(self.open_statistics)
 
@@ -72,6 +75,13 @@ class AdminProfileWindow(QWidget):
         from ui.add_group import AddGroupWindow
         self.add_group_window = AddGroupWindow(self)  # Передаем родительское окно
         self.add_group_window.show()
+        self.close()  # Закрываем текущий экран
+
+    def open_add_sub(self):
+        """Открытие окна добавления оценки"""
+        from ui.add_subject import AddSubWindow
+        self.add_sub_window = AddSubWindow(self)  # Передаем родительское окно
+        self.add_sub_window.show()
         self.close()  # Закрываем текущий экран
 
     def open_add_grade(self):

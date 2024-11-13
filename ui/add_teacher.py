@@ -18,8 +18,11 @@ class AddTeacherWindow(QWidget):
         self.last_name_input = QLineEdit(self)
         self.last_name_input.setPlaceholderText('Фамилия')
 
-        self.subject_input = QLineEdit(self)
-        self.subject_input.setPlaceholderText('Предмет')
+        self.father_name_input = QLineEdit(self)
+        self.father_name_input.setPlaceholderText('Отчество')
+
+        self.role_input = QLineEdit(self)
+        self.role_input.setPlaceholderText('Роль')
 
         # Кнопка добавления преподавателя
         self.add_button = QPushButton('Добавить', self)
@@ -31,7 +34,8 @@ class AddTeacherWindow(QWidget):
         # Добавляем все элементы в layout
         layout.addWidget(self.first_name_input)
         layout.addWidget(self.last_name_input)
-        layout.addWidget(self.subject_input)
+        layout.addWidget(self.father_name_input)
+        layout.addWidget(self.role_input)
         layout.addWidget(self.add_button)
         layout.addWidget(self.back_button)
 

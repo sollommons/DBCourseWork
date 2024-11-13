@@ -13,11 +13,20 @@ class AddGradeWindow(QWidget):
 
         self.label = QLabel("Введите данные оценки:", self)
 
-        self.student_input = QLineEdit(self)
-        self.student_input.setPlaceholderText('Студент')
+        self.student_name_input = QLineEdit(self)
+        self.student_name_input.setPlaceholderText('Имя студента')
+
+        self.student_surname_input = QLineEdit(self)
+        self.student_surname_input.setPlaceholderText('Фамилия студента')
 
         self.subject_input = QLineEdit(self)
         self.subject_input.setPlaceholderText('Предмет')
+
+        self.teacher_name_input = QLineEdit(self)
+        self.teacher_name_input.setPlaceholderText('Имя преподавателя')
+
+        self.teacher_surname_input = QLineEdit(self)
+        self.teacher_surname_input.setPlaceholderText('Фамилия преподавателя')
 
         self.grade_input = QLineEdit(self)
         self.grade_input.setPlaceholderText('Оценка')
@@ -28,8 +37,11 @@ class AddGradeWindow(QWidget):
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
-        layout.addWidget(self.student_input)
+        layout.addWidget(self.student_name_input)
+        layout.addWidget(self.student_surname_input)
         layout.addWidget(self.subject_input)
+        layout.addWidget(self.teacher_name_input)
+        layout.addWidget(self.teacher_surname_input)
         layout.addWidget(self.grade_input)
         layout.addWidget(self.add_button)
         layout.addWidget(self.back_button)
