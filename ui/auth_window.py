@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QFormLayout, QPushButton, QWidget, QLabel, QLineEdit
 
 from logic.auth_logic import AuthLogic
+from ui.student_profile import StudentProfileWindow
 
 
 class AuthWindow(QWidget):
@@ -46,6 +47,8 @@ class AuthWindow(QWidget):
 
         # Инициализируем переменную для окна профиля администратора
         self.admin_profile_window = None
+        self.teacher_profile_window = None
+        self.student_profile_window = None
 
     def on_login_click(self):
         username = self.username_input.text()
@@ -63,9 +66,9 @@ class AuthWindow(QWidget):
             if role == "admin":
                 self.open_admin_profile()
             elif role == "student":
-                self.open_student_dashboard()
+                self.open_student_profile()
             elif role == "teacher":
-                self.open_teacher_dashboard()
+                self.open_teacher_profile()
         else:
             self.label.setText("Неверный логин или пароль")
 
@@ -77,22 +80,20 @@ class AuthWindow(QWidget):
         self.close()  # Закрываем окно авторизации
         self.admin_profile_window.show()  # Показываем окно профиля
 
-    def open_student_dashboard(self):
+    def open_student_profile(self):
         """Открытие панели студента"""
-        try:
-            from ui.student_dashboard import StudentDashboardWindow
-            self.close()  # Закрываем окно авторизации
-            self.student_window = StudentDashboardWindow()
-            self.student_window.show()
-        except Exception as e:
-            print(f"Ошибка при открытии панели студента: {e}")
+        if self.student_profile_window is None:
+            from ui.student_profile import StudentProfileWindow
+            self.student_profile_window = StudentProfileWindow(self)
+        self.close()  # Закрываем окно авторизации
+        self.student_profile_window.show()
 
-    def open_teacher_dashboard(self):
+
+
+    def open_teacher_profile(self):
         """Открытие панели преподавателя"""
-        try:
-            from ui.teacher_dashboard import TeacherDashboardWindow
-            self.close()  # Закрываем окно авторизации
-            self.teacher_window = TeacherDashboardWindow()
-            self.teacher_window.show()
-        except Exception as e:
-            print(f"Ошибка при открытии панели преподавателя: {e}")
+        if self.teacher_profile_window is None:
+            from ui.teacher_profile import TeacherProfileWindow
+            self.teacher_profile_window = TeacherProfileWindow(self)
+        self.close()  # Закрываем окно авторизации
+        self.teacher_profile_window.show()
