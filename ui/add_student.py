@@ -37,6 +37,6 @@ class AddStudentWindow(QWidget):
         self.setLayout(layout)
 
     def back_to_profile(self):
-        """Возврат в профиль администратора"""
+        """Возврат в профиль преподавателя"""
         self.parent_window.show()  # Показываем окно профиля
         self.close()  # Закрываем текущее окно

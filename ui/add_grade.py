@@ -1,5 +1,4 @@
-from PyQt5.QtWidgets import QPushButton, QLineEdit, QLabel, QVBoxLayout, QWidget
-
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel
 
 class AddGradeWindow(QWidget):
     def __init__(self, parent):
@@ -12,7 +11,7 @@ class AddGradeWindow(QWidget):
 
         layout = QVBoxLayout()
 
-        self.label = QLabel("Введите оценку:", self)
+        self.label = QLabel("Введите данные оценки:", self)
 
         self.student_input = QLineEdit(self)
         self.student_input.setPlaceholderText('Студент')
@@ -38,6 +37,6 @@ class AddGradeWindow(QWidget):
         self.setLayout(layout)
 
     def back_to_profile(self):
-        """Возврат в профиль администратора"""
+        """Возврат в профиль преподавателя"""
         self.parent_window.show()  # Показываем окно профиля
         self.close()  # Закрываем текущее окно
