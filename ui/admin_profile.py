@@ -79,7 +79,7 @@ class AdminProfileWindow(QWidget):
 
     def open_add_sub(self):
         """Открытие окна добавления оценки"""
-        from ui.add_subject import AddSubWindow
+        from ui.subject_screen import AddSubWindow
         self.add_sub_window = AddSubWindow(self)  # Передаем родительское окно
         self.add_sub_window.show()
         self.close()  # Закрываем текущий экран
