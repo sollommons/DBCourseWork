@@ -88,8 +88,6 @@ class AuthWindow(QWidget):
         self.close()  # Закрываем окно авторизации
         self.student_profile_window.show()
 
-
-
     def open_teacher_profile(self):
         """Открытие панели преподавателя"""
         if self.teacher_profile_window is None:

@@ -72,7 +72,7 @@ class AdminProfileWindow(QWidget):
 
     def open_add_group(self):
         """Открытие окна добавления группы"""
-        from ui.add_group import AddGroupWindow
+        from ui.group_screen import AddGroupWindow
         self.add_group_window = AddGroupWindow(self)  # Передаем родительское окно
         self.add_group_window.show()
         self.close()  # Закрываем текущий экран

@@ -30,6 +30,7 @@ class AddStudentWindow(QWidget):
 
         self.add_button = QPushButton('Добавить', self)
 
+
         self.back_button = QPushButton('Назад', self)
         self.back_button.clicked.connect(self.back_to_profile)
 
