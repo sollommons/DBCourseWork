@@ -58,35 +58,35 @@ class AdminProfileWindow(QWidget):
 
     def open_add_student(self):
         """Открытие окна добавления студента"""
-        from ui.student_screen import AddStudentWindow
+        from ui.screens.student_screen import AddStudentWindow
         self.add_student_window = AddStudentWindow(self)  # Передаем родительское окно
         self.add_student_window.show()
         self.close()  # Закрываем текущий экран
 
     def open_add_teacher(self):
         """Открытие окна добавления преподавателя"""
-        from ui.teacher_screen import AddTeacherWindow
+        from ui.screens.teacher_screen import AddTeacherWindow
         self.add_teacher_window = AddTeacherWindow(self)  # Передаем родительское окно
         self.add_teacher_window.show()
         self.close()  # Закрываем текущий экран
 
     def open_add_group(self):
         """Открытие окна добавления группы"""
-        from ui.group_screen import AddGroupWindow
+        from ui.screens.group_screen import AddGroupWindow
         self.add_group_window = AddGroupWindow(self)  # Передаем родительское окно
         self.add_group_window.show()
         self.close()  # Закрываем текущий экран
 
     def open_add_sub(self):
         """Открытие окна добавления оценки"""
-        from ui.subject_screen import AddSubWindow
+        from ui.screens.subject_screen import AddSubWindow
         self.add_sub_window = AddSubWindow(self)  # Передаем родительское окно
         self.add_sub_window.show()
         self.close()  # Закрываем текущий экран
 
     def open_add_grade(self):
         """Открытие окна добавления оценки"""
-        from ui.add_grade import AddGradeWindow
+        from ui.screens.grade_screen import AddGradeWindow
         self.add_grade_window = AddGradeWindow(self)  # Передаем родительское окно
         self.add_grade_window.show()
         self.close()  # Закрываем текущий экран

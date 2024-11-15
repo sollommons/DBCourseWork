@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QFormLayout, QPushButton, QWidget, QLabel, QLineEdit
 
 from logic.auth_logic import AuthLogic
-from ui.student_profile import StudentProfileWindow
 
 
 class AuthWindow(QWidget):
@@ -75,7 +74,7 @@ class AuthWindow(QWidget):
     def open_admin_profile(self):
         """Открытие профиля администратора"""
         if self.admin_profile_window is None:  # Если окно профиля не открыто
-            from ui.admin_profile import AdminProfileWindow
+            from ui.profiles.admin_profile import AdminProfileWindow
             self.admin_profile_window = AdminProfileWindow(self)  # Передаем ссылку на родительское окно
         self.close()  # Закрываем окно авторизации
         self.admin_profile_window.show()  # Показываем окно профиля
@@ -83,7 +82,7 @@ class AuthWindow(QWidget):
     def open_student_profile(self):
         """Открытие панели студента"""
         if self.student_profile_window is None:
-            from ui.student_profile import StudentProfileWindow
+            from ui.profiles.student_profile import StudentProfileWindow
             self.student_profile_window = StudentProfileWindow(self)
         self.close()  # Закрываем окно авторизации
         self.student_profile_window.show()
@@ -91,7 +90,7 @@ class AuthWindow(QWidget):
     def open_teacher_profile(self):
         """Открытие панели преподавателя"""
         if self.teacher_profile_window is None:
-            from ui.teacher_profile import TeacherProfileWindow
+            from ui.profiles.teacher_profile import TeacherProfileWindow
             self.teacher_profile_window = TeacherProfileWindow(self)
         self.close()  # Закрываем окно авторизации
         self.teacher_profile_window.show()

@@ -49,14 +49,14 @@ class TeacherProfileWindow(QWidget):
 
     def open_add_student(self):
         """Открытие окна добавления студента"""
-        from ui.student_screen import AddStudentWindow
+        from ui.screens.student_screen import AddStudentWindow
         self.add_student_window = AddStudentWindow(self)  # Передаем родительское окно
         self.add_student_window.show()
         self.close()  # Закрываем текущее окно
 
     def open_add_grade(self):
         """Открытие окна добавления оценки"""
-        from ui.add_grade import AddGradeWindow
+        from ui.screens.grade_screen import AddGradeWindow
         self.add_grade_window = AddGradeWindow(self)  # Передаем родительское окно
         self.add_grade_window.show()
         self.close()  # Закрываем текущее окно
