@@ -65,7 +65,7 @@ class AdminProfileWindow(QWidget):
 
     def open_add_teacher(self):
         """Открытие окна добавления преподавателя"""
-        from ui.add_teacher import AddTeacherWindow
+        from ui.teacher_screen import AddTeacherWindow
         self.add_teacher_window = AddTeacherWindow(self)  # Передаем родительское окно
         self.add_teacher_window.show()
         self.close()  # Закрываем текущий экран
