@@ -1,19 +1,70 @@
 import psycopg2
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QLineEdit, QLabel, QVBoxLayout, QWidget, QMessageBox, QTableWidget, \
-    QTableWidgetItem
+    QTableWidgetItem, QApplication
+
 
 class AddGradeWindow(QWidget):
     def __init__(self, parent):
         super().__init__()
 
         self.setWindowTitle('Экран оценки')
-        self.setGeometry(100, 100, 400, 300)
+        self.setFixedSize(QApplication.primaryScreen().size().width(),QApplication.primaryScreen().size().height()-100)
 
         self.parent_window = parent  # Ссылка на родительское окно
 
+        self.setStyleSheet("""
+                    QWidget {
+                        background-color: #e0f7e7;  /* Бледно-зеленый цвет для фона всего окна */
+                    }
+                    QLabel {
+                        color: #333;  /* Темный цвет для текста */
+                    }
+                    QLineEdit {
+                        background-color: #ffffff;  /* Белый фон для полей ввода */
+                        border-radius: 5px;
+                        border: 1px solid #ccc;
+                        padding: 8px;
+                    }
+                    QPushButton {
+                        background-color: #66bb6a;  /* Зеленый фон для кнопок */
+                        color: white;
+                        font-size: 14px;
+                        padding: 10px;
+                        border-radius: 5px;
+                        border: none;
+                    }
+                    QPushButton:hover {
+                        background-color: #5cb85c;  /* При наведении кнопки темнеют */
+                    }
+                    QPushButton:pressed {
+                        background-color: #4cae4c;  /* При нажатии кнопки */
+                    }
+                    QTableWidget {
+                        background-color: #ffffff;  /* Белый фон для таблицы */
+                        border: 1px solid #ddd;  /* Светлый бордер для таблицы */
+                    }
+                """)
+
         layout = QVBoxLayout()
 
+        button_style = """
+                      QPushButton {
+                          background-color: #4CAF50;
+                          color: white;
+                          font-size: 14px;
+                          padding: 10px;
+                          border-radius: 5px;
+                          border: none;
+                      }
+                      QPushButton:hover {
+                          background-color: #45a049;
+                      }
+                      """
+
         self.label = QLabel("Введите данные оценки:", self)
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
 
         self.student_name_input = QLineEdit(self)
         self.student_name_input.setPlaceholderText('Имя студента')
@@ -34,18 +85,23 @@ class AddGradeWindow(QWidget):
         self.grade_input.setPlaceholderText('Оценка')
 
         self.add_button = QPushButton('Добавить', self)
+        self.add_button.setStyleSheet(button_style)
         self.add_button.clicked.connect(self.add_grade_to_db)
 
         self.update_button = QPushButton('Обновить', self)
+        self.update_button.setStyleSheet(button_style)
         self.update_button.clicked.connect(self.update_grade_to_db)
 
         self.delete_button = QPushButton('Удалить', self)
+        self.delete_button.setStyleSheet("background-color: #f44336; color: white; font-size: 14px; padding: 10px; border-radius: 5px;")
         self.delete_button.clicked.connect(self.delete_grade_to_db)
 
         self.get_grades_button = QPushButton('Посмотреть оценки и студентов', self)
+        self.get_grades_button.setStyleSheet(button_style)
         self.get_grades_button.clicked.connect(self.get_all_grades)
 
         self.back_button = QPushButton('Назад', self)
+        self.back_button.setStyleSheet("background-color: #f44336; color: white; font-size: 14px; padding: 10px; border-radius: 5px;")
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
@@ -324,14 +380,23 @@ class AddGradeWindow(QWidget):
             table.setItem(row, 1, QTableWidgetItem(subject[1]))
             table.setItem(row, 2, QTableWidgetItem(str(subject[2])))
 
+        table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 3)
+        table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 3)
+        table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 3)
+
+        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
+        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+
+        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
+        layout.addStretch(5)  # Это растягиваемое пространство
         layout.addWidget(close_button)
 
+        # Устанавливаем layout для таблицы
         table.setLayout(layout)
-
-        table.resize(400, 300)
+        table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()

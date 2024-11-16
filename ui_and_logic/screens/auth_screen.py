@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QFormLayout, QPushButton, QWidget, QLabel, QLineEdit
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QFormLayout, QPushButton, QWidget, QLabel, QLineEdit, QApplication
 
 from logic.auth_logic import AuthLogic
 
@@ -7,7 +7,64 @@ class AuthWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Авторизация')
-        self.setGeometry(100, 100, 300, 150)
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()  # Получаем доступную геометрию экрана (исключая панель задач и другие элементы)
+
+        # Рассчитываем координаты для центрального положения окна
+        window_width = 300
+        window_height = 150
+        center_x = (screen_geometry.width() - window_width) // 2
+        center_y = (screen_geometry.height() - window_height) // 2
+
+        # Устанавливаем окно в центр экрана
+        self.setGeometry(center_x, center_y, window_width, window_height)
+
+        self.setStyleSheet("""
+                     QWidget {
+                         background-color: #e0f7e7;  /* Бледно-зеленый цвет для фона всего окна */
+                     }
+                     QLabel {
+                         color: #333;  /* Темный цвет для текста */
+                     }
+                     QLineEdit {
+                         background-color: #ffffff;  /* Белый фон для полей ввода */
+                         border-radius: 5px;
+                         border: 1px solid #ccc;
+                         padding: 8px;
+                     }
+                     QPushButton {
+                         background-color: #66bb6a;  /* Зеленый фон для кнопок */
+                         color: white;
+                         font-size: 14px;
+                         padding: 10px;
+                         border-radius: 5px;
+                         border: none;
+                     }
+                     QPushButton:hover {
+                         background-color: #5cb85c;  /* При наведении кнопки темнеют */
+                     }
+                     QPushButton:pressed {
+                         background-color: #4cae4c;  /* При нажатии кнопки */
+                     }
+                     QTableWidget {
+                         background-color: #ffffff;  /* Белый фон для таблицы */
+                         border: 1px solid #ddd;  /* Светлый бордер для таблицы */
+                     }
+                 """)
+
+        button_style = """
+                       QPushButton {
+                           background-color: #4CAF50;
+                           color: white;
+                           font-size: 14px;
+                           padding: 10px;
+                           border-radius: 5px;
+                           border: none;
+                       }
+                       QPushButton:hover {
+                           background-color: #45a049;
+                       }
+                       """
 
         self.label = QLabel('Введите логин и пароль:')
         self.username_input = QLineEdit(self)
@@ -18,6 +75,7 @@ class AuthWindow(QWidget):
         self.password_input.setEchoMode(QLineEdit.Password)
 
         self.login_button = QPushButton('Войти', self)
+        self.login_button.setStyleSheet(button_style)
         self.login_button.clicked.connect(self.on_login_click)
 
         layout = QFormLayout()

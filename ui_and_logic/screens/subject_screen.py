@@ -1,6 +1,7 @@
 import psycopg2
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QLineEdit, QLabel, QVBoxLayout, QWidget, QMessageBox, QTableWidget, \
-    QTableWidgetItem
+    QTableWidgetItem, QApplication
 
 
 class AddSubWindow(QWidget):
@@ -8,14 +9,63 @@ class AddSubWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle('Экран предмета')
-        self.setGeometry(100, 100, 400, 300)
+        self.setFixedSize(QApplication.primaryScreen().size().width(),QApplication.primaryScreen().size().height()-100)
 
         self.parent_window = parent
 
+        self.setStyleSheet("""
+                     QWidget {
+                         background-color: #e0f7e7;  /* Бледно-зеленый цвет для фона всего окна */
+                     }
+                     QLabel {
+                         color: #333;  /* Темный цвет для текста */
+                     }
+                     QLineEdit {
+                         background-color: #ffffff;  /* Белый фон для полей ввода */
+                         border-radius: 5px;
+                         border: 1px solid #ccc;
+                         padding: 8px;
+                     }
+                     QPushButton {
+                         background-color: #66bb6a;  /* Зеленый фон для кнопок */
+                         color: white;
+                         font-size: 14px;
+                         padding: 10px;
+                         border-radius: 5px;
+                         border: none;
+                     }
+                     QPushButton:hover {
+                         background-color: #5cb85c;  /* При наведении кнопки темнеют */
+                     }
+                     QPushButton:pressed {
+                         background-color: #4cae4c;  /* При нажатии кнопки */
+                     }
+                     QTableWidget {
+                         background-color: #ffffff;  /* Белый фон для таблицы */
+                         border: 1px solid #ddd;  /* Светлый бордер для таблицы */
+                     }
+                 """)
+
         layout = QVBoxLayout()
+
+        button_style = """
+                       QPushButton {
+                           background-color: #4CAF50;
+                           color: white;
+                           font-size: 14px;
+                           padding: 10px;
+                           border-radius: 5px;
+                           border: none;
+                       }
+                       QPushButton:hover {
+                           background-color: #45a049;
+                       }
+                       """
 
         self.label = QLabel("Введите данные предмета:\n Инструкция:\n- Чтобы добавить предмет или вписать новый  используйте\n"
                             "поле со значением <Новое название предмета>\n- Чтобы удалить или изменить старое - поле со значением <Старое название предмета>", self)
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
 
         self.subject_name_input = QLineEdit(self)
         self.subject_name_input.setPlaceholderText('Новое название предмета')
@@ -24,18 +74,23 @@ class AddSubWindow(QWidget):
         self.old_subject_name_input.setPlaceholderText('Старое название предмета')
 
         self.add_button = QPushButton('Добавить', self)
+        self.add_button.setStyleSheet(button_style)
         self.add_button.clicked.connect(self.add_subject_to_db)
 
         self.change_button = QPushButton('Изменить', self)
+        self.change_button.setStyleSheet(button_style)
         self.change_button.clicked.connect(self.update_subject_in_db)
 
         self.delete_button = QPushButton('Удалить', self)
+        self.delete_button.setStyleSheet("background-color: #f44336; color: white; font-size: 14px; padding: 10px; border-radius: 5px;")
         self.delete_button.clicked.connect(self.delete_subject_from_db)
 
         self.get_button = QPushButton('Посмотреть все группы', self)
+        self.get_button.setStyleSheet(button_style)
         self.get_button.clicked.connect(self.get_all_subjects)
 
         self.back_button = QPushButton('Назад', self)
+        self.back_button.setStyleSheet("background-color: #f44336; color: white; font-size: 14px; padding: 10px; border-radius: 5px;")
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
@@ -233,14 +288,22 @@ class AddSubWindow(QWidget):
             table.setItem(row, 0, QTableWidgetItem(str(subject[0])))
             table.setItem(row, 1, QTableWidgetItem(subject[1]))
 
+        table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 2)
+        table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 2)
+
+        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
+        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+
+        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
+        layout.addStretch(5)  # Это растягиваемое пространство
         layout.addWidget(close_button)
 
+        # Устанавливаем layout для таблицы
         table.setLayout(layout)
-
-        table.resize(400, 300)
+        table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()

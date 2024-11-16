@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication
 import sys
-from ui.auth_window import AuthWindow
+from ui.screens.auth_screen import AuthWindow
 
 def main():
     app = QApplication(sys.argv)

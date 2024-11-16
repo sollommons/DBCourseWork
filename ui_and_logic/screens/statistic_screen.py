@@ -8,7 +8,7 @@ class StatisticsWindow(QWidget):
     def __init__(self, parent):
         super().__init__()
         self.setWindowTitle('Статистика')
-        self.showMaximized()
+        self.setFixedSize(QApplication.primaryScreen().size().width(),QApplication.primaryScreen().size().height()-100)
 
         self.parent_window = parent
 
