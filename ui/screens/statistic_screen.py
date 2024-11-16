@@ -31,6 +31,12 @@ class StatisticsWindow(QWidget):
         self.get_all_button = QPushButton('Посмотреть средний балл студентов по предметам за период', self)
         self.get_all_button.clicked.connect(self.get_all_with_date)
 
+        self.get_teacher_button = QPushButton('Посмотреть средний балл по преподавателям и предметам за период', self)
+        self.get_teacher_button.clicked.connect(self.get_avg_marks_by_subject_and_teacher)
+
+        self.get_group_button = QPushButton('Посмотреть средний балл по группам за период', self)
+        self.get_group_button.clicked.connect(self.get_group_with_date)
+
         self.back_button = QPushButton('Назад', self)
         self.back_button.clicked.connect(self.back_to_profile)
 
@@ -40,6 +46,8 @@ class StatisticsWindow(QWidget):
         layout.addWidget(self.get_sub_button)
         layout.addWidget(self.get_stud_button)
         layout.addWidget(self.get_all_button)
+        layout.addWidget(self.get_teacher_button)
+        layout.addWidget(self.get_group_button)
         layout.addWidget(self.back_button)
 
         self.setLayout(layout)
@@ -306,3 +314,179 @@ class StatisticsWindow(QWidget):
         table.setLayout(layout)
         table.resize(600, 400)
         table.show()
+
+    def get_avg_marks_by_subject_and_teacher(self):
+        """Получить средний балл по предметам и преподавателям за интервал лет"""
+        self._get_avg_marks_by_subject_and_teacher_from_db()
+
+    def _get_avg_marks_by_subject_and_teacher_from_db(self):
+        """Метод для получения данных о среднем балле по предметам и преподавателям из базы данных"""
+        start_date = self.start_date.text().strip()
+        end_date = self.end_date.text().strip()
+
+        # Проверка на корректность введенных данных
+        if not start_date.isdigit() or not end_date.isdigit():
+            QMessageBox.warning(self, "Ошибка", "Пожалуйста, введите корректные года.")
+            return
+
+        start_year = int(start_date)
+        end_year = int(end_date)
+
+        if start_year > end_year:
+            QMessageBox.warning(self, "Ошибка", "Начальный год не может быть больше конечного!")
+            return
+
+        try:
+            # Подключение к базе данных
+            connection = psycopg2.connect(
+                dbname="university",
+                user="postgres",
+                password="s46825710",
+                host="localhost",
+                port="5432"
+            )
+            cursor = connection.cursor()
+
+            # Выполнение вызова функции с параметрами
+            cursor.execute(
+                "SELECT * FROM public.get_avg_marks_by_subject_and_teacher_for_period(%s, %s);",
+                (start_year, end_year)
+            )
+
+            result = cursor.fetchall()
+
+            if not result:
+                QMessageBox.information(self, "Информация", "Ничего не найдено.")
+                return
+
+            # Отображаем результат в таблице
+            self.show_avg_marks_result_in_table(result)
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка", f"Не удалось получить данные: {str(e)}")
+        finally:
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
+
+    def show_avg_marks_result_in_table(self, res):
+        """Отображает результаты по предметам и преподавателям в таблице"""
+        table = QTableWidget(self)
+        table.setRowCount(len(res))
+        table.setColumnCount(4)  # Столбцы: 'Имя преподавателя', 'Фамилия преподавателя', 'Предмет', 'Средний балл'
+        table.setHorizontalHeaderLabels(['Имя преподавателя', 'Фамилия преподавателя', 'Предмет', 'Средний балл'])
+        table.setEditTriggers(QTableWidget.NoEditTriggers)
+
+        # Заполняем таблицу результатами
+        for row, row_data in enumerate(res):
+            for col, item in enumerate(row_data):
+                if isinstance(item, float):  # Если это число с плавающей запятой
+                    # Форматируем число до 2 знаков после запятой
+                    table.setItem(row, col, QTableWidgetItem(f"{item:.2f}"))
+                else:
+                    # Преобразуем другие данные в строковый формат
+                    table.setItem(row, col, QTableWidgetItem(str(item)))
+
+        # Создаем кнопку для закрытия таблицы
+        close_button = QPushButton('Закрыть', table)
+        close_button.clicked.connect(table.close)
+
+        # Добавляем таблицу и кнопку на layout
+        layout = QVBoxLayout(table)
+        layout.addWidget(table)
+        layout.addWidget(close_button)
+
+        # Устанавливаем layout для таблицы
+        table.setLayout(layout)
+        table.resize(600, 400)
+        table.show()
+
+    def get_group_with_date(self):
+        """Получить средний балл по группам за интервал лет"""
+        self._get_data_about_group_from_db('public.get_avg_marks_by_group_for_period')
+
+    def _get_data_about_group_from_db(self, procedure_name):
+        """Общий метод для получения данных о группах из базы данных"""
+        start_date = self.start_date.text().strip()
+        end_date = self.end_date.text().strip()
+
+        # Проверка на корректность введенных данных
+        if not start_date.isdigit() or not end_date.isdigit():
+            QMessageBox.warning(self, "Ошибка", "Пожалуйста, введите корректные года.")
+            return
+
+        start_year = int(start_date)
+        end_year = int(end_date)
+
+        if start_year > end_year:
+            QMessageBox.warning(self, "Ошибка", "Начальный год не может быть больше конечного!")
+            return
+
+        try:
+            # Подключение к базе данных
+            connection = psycopg2.connect(
+                dbname="university",
+                user="postgres",
+                password="s46825710",  # Замените на ваш пароль
+                host="localhost",
+                port="5432"
+            )
+            cursor = connection.cursor()
+
+            # Выполнение вызова функции с параметрами
+            cursor.execute(f"SELECT * FROM {procedure_name}(%s, %s);", (start_year, end_year))
+
+            result = cursor.fetchall()
+
+            if not result:
+                QMessageBox.information(self, "Информация", "Ничего не найдено.")
+                return
+
+            # Отображаем результат в таблице
+            self.show_group_result_in_table(result)
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            QMessageBox.critical(self, "Ошибка", f"Не удалось получить данные: {str(e)}")
+        finally:
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
+
+    def show_group_result_in_table(self, res):
+        """Отображает данные о группах в таблице"""
+        table = QTableWidget(self)
+        table.setRowCount(len(res))
+        table.setColumnCount(2)  # Столбцы: 'Группа' и 'Средний балл'
+        table.setHorizontalHeaderLabels(['Группа', 'Средний балл'])
+        table.setEditTriggers(QTableWidget.NoEditTriggers)
+
+        # Заполняем таблицу результатами
+        for row, row_data in enumerate(res):
+            for col, item in enumerate(row_data):
+                if isinstance(item, float):  # Если это число с плавающей запятой
+                    # Форматируем число до 2 знаков после запятой
+                    table.setItem(row, col, QTableWidgetItem(f"{item:.2f}"))
+                else:
+                    # Преобразуем другие данные в строковый формат
+                    table.setItem(row, col, QTableWidgetItem(str(item)))
+
+        # Создаем кнопку для закрытия таблицы
+        close_button = QPushButton('Закрыть', table)
+        close_button.clicked.connect(table.close)
+
+        # Добавляем таблицу и кнопку на layout
+        layout = QVBoxLayout(table)
+        layout.addWidget(table)
+        layout.addWidget(close_button)
+
+        # Устанавливаем layout для таблицы
+        table.setLayout(layout)
+        table.resize(400, 300)
+        table.show()
+
