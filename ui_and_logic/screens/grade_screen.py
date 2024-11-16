@@ -11,7 +11,7 @@ class AddGradeWindow(QWidget):
         self.setWindowTitle('Экран оценки')
         self.setFixedSize(QApplication.primaryScreen().size().width(),QApplication.primaryScreen().size().height()-100)
 
-        self.parent_window = parent  # Ссылка на родительское окно
+        self.parent_window = parent
 
         self.setStyleSheet("""
                     QWidget {
@@ -66,6 +66,13 @@ class AddGradeWindow(QWidget):
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
 
+        self.instruction_label = QLabel("Инструкция:\n"
+                                        "Для добавления заполните все поля\n"
+                                        "Для удаления заполните тоже все поля\n"
+                                        "Для обновления заполните все поля на экране (да-да, снова)", self)
+        self.instruction_label.setAlignment(Qt.AlignCenter)
+        self.instruction_label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
+
         self.student_name_input = QLineEdit(self)
         self.student_name_input.setPlaceholderText('Имя студента')
 
@@ -105,6 +112,7 @@ class AddGradeWindow(QWidget):
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
+        layout.addWidget(self.instruction_label)
         layout.addWidget(self.student_name_input)
         layout.addWidget(self.student_surname_input)
         layout.addWidget(self.subject_input)
@@ -177,7 +185,6 @@ class AddGradeWindow(QWidget):
             connection.close()
             QMessageBox.information(self, "Успех", f"Оценка '{student_name}' успешно добавлена.")
 
-            # Очищаем поле ввода
             self.student_name_input.clear()
             self.student_surname_input.clear()
             self.subject_input.clear()
@@ -243,7 +250,6 @@ class AddGradeWindow(QWidget):
             connection.close()
             QMessageBox.information(self, "Успех", f"Оценка '{student_name}' успешно изменена.")
 
-            # Очищаем поле ввода
             self.student_name_input.clear()
             self.student_surname_input.clear()
             self.subject_input.clear()
@@ -312,7 +318,6 @@ class AddGradeWindow(QWidget):
             connection.close()
             QMessageBox.information(self, "Успех", f"Оценка '{student_name}' успешно удалена.")
 
-            # Очищаем поле ввода
             self.student_name_input.clear()
             self.student_surname_input.clear()
             self.subject_input.clear()
@@ -384,19 +389,16 @@ class AddGradeWindow(QWidget):
         table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 3)
         table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 3)
 
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()

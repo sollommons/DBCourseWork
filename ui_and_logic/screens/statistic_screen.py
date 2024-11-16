@@ -66,6 +66,11 @@ class StatisticsWindow(QWidget):
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
 
+        self.instruction_label = QLabel("Инструкция:\n"
+                                        "Заполните оба поля каким-то конкретным годом\n", self)
+        self.instruction_label.setAlignment(Qt.AlignCenter)
+        self.instruction_label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
+
         self.start_date = QLineEdit(self)
         self.start_date.setPlaceholderText('Начальный год')
 
@@ -97,6 +102,7 @@ class StatisticsWindow(QWidget):
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
+        layout.addWidget(self.instruction_label)
         layout.addWidget(self.start_date)
         layout.addWidget(self.end_date)
         layout.addWidget(self.get_sub_button)
@@ -130,7 +136,6 @@ class StatisticsWindow(QWidget):
         start_date = self.start_date.text().strip()
         end_date = self.end_date.text().strip()
 
-        # Проверка на корректность введенных данных
         if not start_date.isdigit() or not end_date.isdigit():
             QMessageBox.warning(self, "Ошибка", "Пожалуйста, введите корректные года.")
             return
@@ -143,17 +148,15 @@ class StatisticsWindow(QWidget):
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
                 dbname="university",
                 user="postgres",
-                password="s46825710",  # Замените на ваш пароль
+                password="s46825710",
                 host="localhost",
                 port="5432"
             )
             cursor = connection.cursor()
 
-            # Выполнение вызова функции с параметрами
             cursor.execute(f"SELECT * FROM {procedure_name}(%s, %s);", (start_year, end_year))
 
             result = cursor.fetchall()
@@ -162,7 +165,6 @@ class StatisticsWindow(QWidget):
                 QMessageBox.information(self, "Информация", "Ничего не найдено.")
                 return
 
-            # Отображаем результат в таблице
             self.show_subj_result_in_table(result)
 
         except Exception as e:
@@ -179,36 +181,30 @@ class StatisticsWindow(QWidget):
         """Отображает результаты по предметам в таблице"""
         table = QTableWidget(self)
         table.setRowCount(len(res))
-        table.setColumnCount(2)  # Столбцы: 'Предмет' и 'Средний балл'
+        table.setColumnCount(2)
         table.setHorizontalHeaderLabels(['Предмет', 'Средний балл'])
         table.setEditTriggers(QTableWidget.NoEditTriggers)
 
-        # Заполняем таблицу результатами
         for row, row_data in enumerate(res):
             for col, item in enumerate(row_data):
-                if isinstance(item, float):  # Если это число с плавающей запятой
-                    # Форматируем число до 2 знаков после запятой
+                if isinstance(item, float):
                     table.setItem(row, col, QTableWidgetItem(f"{item:.2f}"))
                 else:
-                    # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
         table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 2)
         table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 2)
 
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
@@ -218,7 +214,6 @@ class StatisticsWindow(QWidget):
         start_date = self.start_date.text().strip()
         end_date = self.end_date.text().strip()
 
-        # Проверка на корректность введенных данных
         if not start_date.isdigit() or not end_date.isdigit():
             QMessageBox.warning(self, "Ошибка", "Пожалуйста, введите корректные года.")
             return
@@ -231,7 +226,6 @@ class StatisticsWindow(QWidget):
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
                 dbname="university",
                 user="postgres",
@@ -241,7 +235,6 @@ class StatisticsWindow(QWidget):
             )
             cursor = connection.cursor()
 
-            # Выполнение вызова функции с параметрами
             cursor.execute(f"SELECT * FROM {procedure_name}(%s, %s);", (start_year, end_year))
 
             result = cursor.fetchall()
@@ -250,7 +243,6 @@ class StatisticsWindow(QWidget):
                 QMessageBox.information(self, "Информация", "Ничего не найдено.")
                 return
 
-            # Отображаем результат в таблице
             self.show_stud_result_in_table(result)
 
         except Exception as e:
@@ -267,37 +259,31 @@ class StatisticsWindow(QWidget):
         """Отображает результаты по студентам в таблице"""
         table = QTableWidget(self)
         table.setRowCount(len(res))
-        table.setColumnCount(3)  # Столбцы: 'Имя', 'Фамилия', 'Средний балл'
+        table.setColumnCount(3)
         table.setHorizontalHeaderLabels(['Имя', 'Фамилия', 'Средний балл'])
         table.setEditTriggers(QTableWidget.NoEditTriggers)
 
-        # Заполняем таблицу результатами
         for row, row_data in enumerate(res):
             for col, item in enumerate(row_data):
-                if isinstance(item, float):  # Если это число с плавающей запятой
-                    # Форматируем число до 2 знаков после запятой
+                if isinstance(item, float):
                     table.setItem(row, col, QTableWidgetItem(f"{item:.2f}"))
                 else:
-                    # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
         table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 3)
         table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 3)
         table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 3)
 
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
@@ -307,7 +293,6 @@ class StatisticsWindow(QWidget):
         start_date = self.start_date.text().strip()
         end_date = self.end_date.text().strip()
 
-        # Проверка на корректность введенных данных
         if not start_date.isdigit() or not end_date.isdigit():
             QMessageBox.warning(self, "Ошибка", "Пожалуйста, введите корректные года.")
             return
@@ -320,17 +305,15 @@ class StatisticsWindow(QWidget):
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
                 dbname="university",
                 user="postgres",
-                password="s46825710",  # Замените на ваш пароль
+                password="s46825710",
                 host="localhost",
                 port="5432"
             )
             cursor = connection.cursor()
 
-            # Выполнение вызова функции с параметрами
             cursor.execute(f"SELECT * FROM {procedure_name}(%s, %s);", (start_year, end_year))
 
             result = cursor.fetchall()
@@ -339,7 +322,6 @@ class StatisticsWindow(QWidget):
                 QMessageBox.information(self, "Информация", "Ничего не найдено.")
                 return
 
-            # Отображаем результат в таблице
             self.show_all_result_in_table(result)
 
         except Exception as e:
@@ -356,37 +338,31 @@ class StatisticsWindow(QWidget):
         """Отображает данные студентов и предметов в таблице"""
         table = QTableWidget(self)
         table.setRowCount(len(res))
-        table.setColumnCount(4)  # Столбцы: 'Имя', 'Фамилия', 'Предмет', 'Средний балл'
+        table.setColumnCount(4)
         table.setHorizontalHeaderLabels(['Имя', 'Фамилия', 'Предмет', 'Средний балл'])
         table.setEditTriggers(QTableWidget.NoEditTriggers)
 
-        # Заполняем таблицу результатами
         for row, row_data in enumerate(res):
             for col, item in enumerate(row_data):
-                if isinstance(item, float):  # Если это число с плавающей запятой
-                    # Форматируем число до 2 знаков после запятой
+                if isinstance(item, float):
                     table.setItem(row, col, QTableWidgetItem(f"{item:.2f}"))
                 else:
-                    # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
         table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 4)
         table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 4)
         table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 4)
         table.setColumnWidth(3, QApplication.primaryScreen().size().width() // 4)
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
@@ -400,7 +376,6 @@ class StatisticsWindow(QWidget):
         start_date = self.start_date.text().strip()
         end_date = self.end_date.text().strip()
 
-        # Проверка на корректность введенных данных
         if not start_date.isdigit() or not end_date.isdigit():
             QMessageBox.warning(self, "Ошибка", "Пожалуйста, введите корректные года.")
             return
@@ -413,7 +388,6 @@ class StatisticsWindow(QWidget):
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
                 dbname="university",
                 user="postgres",
@@ -423,7 +397,6 @@ class StatisticsWindow(QWidget):
             )
             cursor = connection.cursor()
 
-            # Выполнение вызова функции с параметрами
             cursor.execute(
                 "SELECT * FROM public.get_avg_marks_by_subject_and_teacher_for_period(%s, %s);",
                 (start_year, end_year)
@@ -435,7 +408,6 @@ class StatisticsWindow(QWidget):
                 QMessageBox.information(self, "Информация", "Ничего не найдено.")
                 return
 
-            # Отображаем результат в таблице
             self.show_avg_marks_result_in_table(result)
 
         except Exception as e:
@@ -452,18 +424,15 @@ class StatisticsWindow(QWidget):
         """Отображает результаты по предметам и преподавателям в таблице"""
         table = QTableWidget(self)
         table.setRowCount(len(res))
-        table.setColumnCount(4)  # Столбцы: 'Имя преподавателя', 'Фамилия преподавателя', 'Предмет', 'Средний балл'
+        table.setColumnCount(4)
         table.setHorizontalHeaderLabels(['Имя преподавателя', 'Фамилия преподавателя', 'Предмет', 'Средний балл'])
         table.setEditTriggers(QTableWidget.NoEditTriggers)
 
-        # Заполняем таблицу результатами
         for row, row_data in enumerate(res):
             for col, item in enumerate(row_data):
-                if isinstance(item, float):  # Если это число с плавающей запятой
-                    # Форматируем число до 2 знаков после запятой
+                if isinstance(item, float):
                     table.setItem(row, col, QTableWidgetItem(f"{item:.2f}"))
                 else:
-                    # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
         table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 4)
@@ -471,19 +440,16 @@ class StatisticsWindow(QWidget):
         table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 4)
         table.setColumnWidth(3, QApplication.primaryScreen().size().width() // 4)
 
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
@@ -497,7 +463,6 @@ class StatisticsWindow(QWidget):
         start_date = self.start_date.text().strip()
         end_date = self.end_date.text().strip()
 
-        # Проверка на корректность введенных данных
         if not start_date.isdigit() or not end_date.isdigit():
             QMessageBox.warning(self, "Ошибка", "Пожалуйста, введите корректные года.")
             return
@@ -510,17 +475,15 @@ class StatisticsWindow(QWidget):
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
                 dbname="university",
                 user="postgres",
-                password="s46825710",  # Замените на ваш пароль
+                password="s46825710",
                 host="localhost",
                 port="5432"
             )
             cursor = connection.cursor()
 
-            # Выполнение вызова функции с параметрами
             cursor.execute(f"SELECT * FROM {procedure_name}(%s, %s);", (start_year, end_year))
 
             result = cursor.fetchall()
@@ -529,7 +492,6 @@ class StatisticsWindow(QWidget):
                 QMessageBox.information(self, "Информация", "Ничего не найдено.")
                 return
 
-            # Отображаем результат в таблице
             self.show_group_result_in_table(result)
 
         except Exception as e:
@@ -546,37 +508,30 @@ class StatisticsWindow(QWidget):
         """Отображает данные о группах в таблице"""
         table = QTableWidget(self)
         table.setRowCount(len(res))
-        table.setColumnCount(2)  # Столбцы: 'Группа' и 'Средний балл'
+        table.setColumnCount(2)
         table.setHorizontalHeaderLabels(['Группа', 'Средний балл'])
         table.setEditTriggers(QTableWidget.NoEditTriggers)
 
-        # Заполняем таблицу результатами
         for row, row_data in enumerate(res):
             for col, item in enumerate(row_data):
-                if isinstance(item, float):  # Если это число с плавающей запятой
-                    # Форматируем число до 2 знаков после запятой
+                if isinstance(item, float):
                     table.setItem(row, col, QTableWidgetItem(f"{item:.2f}"))
                 else:
-                    # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
         table.setColumnWidth(0, QApplication.primaryScreen().size().width()//2)
         table.setColumnWidth(1, QApplication.primaryScreen().size().width()//2)
 
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
-

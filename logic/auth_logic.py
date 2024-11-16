@@ -12,7 +12,7 @@ class AuthLogic:
             cursor.execute("SELECT role FROM users WHERE username = %s AND password = %s", (username, password))
             result = cursor.fetchone()
             if result:
-                return True, result[0]  # Возвращаем роль пользователя
+                return True, result[0]
             else:
                 return False, None
         except Exception as e:

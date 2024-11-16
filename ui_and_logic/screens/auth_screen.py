@@ -8,15 +8,13 @@ class AuthWindow(QWidget):
         super().__init__()
         self.setWindowTitle('Авторизация')
         screen = QApplication.primaryScreen()
-        screen_geometry = screen.availableGeometry()  # Получаем доступную геометрию экрана (исключая панель задач и другие элементы)
+        screen_geometry = screen.availableGeometry()
 
-        # Рассчитываем координаты для центрального положения окна
         window_width = 300
         window_height = 150
         center_x = (screen_geometry.width() - window_width) // 2
         center_y = (screen_geometry.height() - window_height) // 2
 
-        # Устанавливаем окно в центр экрана
         self.setGeometry(center_x, center_y, window_width, window_height)
 
         self.setStyleSheet("""
@@ -128,24 +126,27 @@ class AuthWindow(QWidget):
 
     def open_admin_profile(self):
         """Открытие профиля администратора"""
+        self.label.setText("Введите логин и пароль:")
         if self.admin_profile_window is None:
-            from ui.profiles.admin_profile import AdminProfileWindow
+            from ui_and_logic.profiles.admin_profile import AdminProfileWindow
             self.admin_profile_window = AdminProfileWindow(self)
         self.close()
         self.admin_profile_window.show()
 
     def open_student_profile(self):
         """Открытие панели студента"""
+        self.label.setText("Введите логин и пароль:")
         if self.student_profile_window is None:
-            from ui.profiles.student_profile import StudentProfileWindow
+            from ui_and_logic.profiles.student_profile import StudentProfileWindow
             self.student_profile_window = StudentProfileWindow(self)
         self.close()
         self.student_profile_window.show()
 
     def open_teacher_profile(self):
         """Открытие панели преподавателя"""
+        self.label.setText("Введите логин и пароль:")
         if self.teacher_profile_window is None:
-            from ui.profiles.teacher_profile import TeacherProfileWindow
+            from ui_and_logic.profiles.teacher_profile import TeacherProfileWindow
             self.teacher_profile_window = TeacherProfileWindow(self)
         self.close()
         self.teacher_profile_window.show()

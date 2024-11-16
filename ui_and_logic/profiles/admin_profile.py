@@ -81,7 +81,7 @@ class AdminProfileWindow(QWidget):
         self.add_teacher_button = QPushButton('Экран преподавателя', self)
         self.add_teacher_button.setStyleSheet(button_style)
 
-        self.add_group_button = QPushButton('Экран Группы', self)
+        self.add_group_button = QPushButton('Экран группы', self)
         self.add_group_button.setStyleSheet(button_style)
 
         self.add_sub_button = QPushButton('Экран предмета', self)
@@ -117,48 +117,47 @@ class AdminProfileWindow(QWidget):
         self.statistics_button.clicked.connect(self.open_statistics)
 
     def back_to_profile(self):
-        """Возврат в профиль """
         self.parent_window.show()
         self.close()
 
     def open_add_student(self):
         """Открытие окна добавления студента"""
-        from ui.screens.student_screen import AddStudentWindow
+        from ui_and_logic.screens.student_screen import AddStudentWindow
         self.add_student_window = AddStudentWindow(self)
         self.add_student_window.show()
         self.close()
 
     def open_add_teacher(self):
         """Открытие окна добавления преподавателя"""
-        from ui.screens.teacher_screen import AddTeacherWindow
+        from ui_and_logic.screens.teacher_screen import AddTeacherWindow
         self.add_teacher_window = AddTeacherWindow(self)
         self.add_teacher_window.show()
         self.close()
 
     def open_add_group(self):
         """Открытие окна добавления группы"""
-        from ui.screens.group_screen import AddGroupWindow
+        from ui_and_logic.screens.group_screen import AddGroupWindow
         self.add_group_window = AddGroupWindow(self)
         self.add_group_window.show()
         self.close()
 
     def open_add_sub(self):
-        """Открытие окна добавления оценки"""
-        from ui.screens.subject_screen import AddSubWindow
+        """Открытие окна добавления предмета"""
+        from ui_and_logic.screens.subject_screen import AddSubWindow
         self.add_sub_window = AddSubWindow(self)
         self.add_sub_window.show()
         self.close()
 
     def open_add_grade(self):
         """Открытие окна добавления оценки"""
-        from ui.screens.grade_screen import AddGradeWindow
+        from ui_and_logic.screens.grade_screen import AddGradeWindow
         self.add_grade_window = AddGradeWindow(self)
         self.add_grade_window.show()
         self.close()
 
     def open_statistics(self):
         """Открытие окна статистики"""
-        from ui.screens.statistic_screen import StatisticsWindow
+        from ui_and_logic.screens.statistic_screen import StatisticsWindow
         self.statistics_window = StatisticsWindow(self)
         self.statistics_window.show()
         self.close()

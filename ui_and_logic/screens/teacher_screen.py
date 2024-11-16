@@ -66,6 +66,13 @@ class AddTeacherWindow(QWidget):
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
 
+        self.instruction_label = QLabel("Инструкция:\n"
+                                        "Для добавления заполните поля без слов <Старое/Старая>\n"
+                                        "Для удаление заполните поля со словами <Старое/Старая>\n"
+                                        "Для обновления заполните все поля на экране", self)
+        self.instruction_label.setAlignment(Qt.AlignCenter)
+        self.instruction_label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
+
         self.first_name_input = QLineEdit(self)
         self.first_name_input.setPlaceholderText('Имя')
 
@@ -105,6 +112,7 @@ class AddTeacherWindow(QWidget):
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
+        layout.addWidget(self.instruction_label)
         layout.addWidget(self.first_name_input)
         layout.addWidget(self.last_name_input)
         layout.addWidget(self.father_name_input)
@@ -342,19 +350,16 @@ class AddTeacherWindow(QWidget):
         table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 4)
         table.setColumnWidth(3, QApplication.primaryScreen().size().width() // 4)
 
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()

@@ -62,13 +62,19 @@ class AddSubWindow(QWidget):
                        }
                        """
 
-        self.label = QLabel("Введите данные предмета:\n Инструкция:\n- Чтобы добавить предмет или вписать новый  используйте\n"
-                            "поле со значением <Новое название предмета>\n- Чтобы удалить или изменить старое - поле со значением <Старое название предмета>", self)
+        self.label = QLabel("Введите данные предмета:", self)
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
 
+        self.instruction_label = QLabel("Инструкция:\n"
+                                        "Для добавления заполните поля без слова <Старое>\n"
+                                        "Для удаление заполните поля со словом <Старое>\n"
+                                        "Для обновления заполните все поля на экране", self)
+        self.instruction_label.setAlignment(Qt.AlignCenter)
+        self.instruction_label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
+
         self.subject_name_input = QLineEdit(self)
-        self.subject_name_input.setPlaceholderText('Новое название предмета')
+        self.subject_name_input.setPlaceholderText('Название предмета')
 
         self.old_subject_name_input = QLineEdit(self)
         self.old_subject_name_input.setPlaceholderText('Старое название предмета')
@@ -94,6 +100,7 @@ class AddSubWindow(QWidget):
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
+        layout.addWidget(self.instruction_label)
         layout.addWidget(self.subject_name_input)
         layout.addWidget(self.old_subject_name_input)
         layout.addWidget(self.add_button)
@@ -291,19 +298,16 @@ class AddSubWindow(QWidget):
         table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 2)
         table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 2)
 
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()

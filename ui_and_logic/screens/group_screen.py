@@ -62,13 +62,19 @@ class AddGroupWindow(QWidget):
                        }
                        """
 
-        self.label = QLabel("Введите данные группы:\n Инструкция:\n- Чтобы добавить группу или вписать новое название используйте\n"
-                            "поле со значением <Новое название группы>\n- Чтобы удалить или изменить старое - поле со значением <Старое название группы>", self)
+        self.label = QLabel("Введите данные группы:", self)
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
 
+        self.instruction_label = QLabel("Инструкция:\n"
+                            "Для добавления заполните поля без слова <Старое>\n"
+                            "Для удаления заполните поля со словом <Старое>\n"
+                            "Для обновления заполните все поля на экране", self)
+        self.instruction_label.setAlignment(Qt.AlignCenter)
+        self.instruction_label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
+
         self.group_name_input = QLineEdit(self)
-        self.group_name_input.setPlaceholderText('Новое название группы')
+        self.group_name_input.setPlaceholderText('Название группы')
 
         self.old_group_name_input = QLineEdit(self)
         self.old_group_name_input.setPlaceholderText('Старое название группы')
@@ -94,6 +100,7 @@ class AddGroupWindow(QWidget):
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
+        layout.addWidget(self.instruction_label)
         layout.addWidget(self.group_name_input)
         layout.addWidget(self.old_group_name_input)
         layout.addWidget(self.add_button)
@@ -136,7 +143,6 @@ class AddGroupWindow(QWidget):
             connection.close()
             QMessageBox.information(self, "Успех", f"Группа '{group_name}' успешно добавлена.")
 
-            # Очищаем поле ввода
             self.group_name_input.clear()
 
         except Exception as e:
@@ -192,7 +198,7 @@ class AddGroupWindow(QWidget):
 
         except Exception as e:
             import traceback
-            traceback.print_exc()  # Выводим стек ошибки
+            traceback.print_exc()
             QMessageBox.critical(self, "Ошибка", f"Не удалось изменить группу: {str(e)}")
         finally:
             if cursor:
@@ -236,7 +242,7 @@ class AddGroupWindow(QWidget):
 
         except Exception as e:
             import traceback
-            traceback.print_exc()  # Выводим стек ошибки
+            traceback.print_exc()
             QMessageBox.critical(self, "Ошибка", f"Не удалось удалить группу: {str(e)}")
         finally:
             if cursor:
@@ -296,19 +302,16 @@ class AddGroupWindow(QWidget):
         table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 2)
         table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 2)
 
-        # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
-        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+        close_button.setFixedHeight(40)
 
-        # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
-        layout.addStretch(5)  # Это растягиваемое пространство
+        layout.addStretch(5)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для таблицы
         table.setLayout(layout)
         table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
