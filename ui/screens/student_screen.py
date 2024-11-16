@@ -305,6 +305,7 @@ class AddStudentWindow(QWidget):
             FROM public.people s
             JOIN 
             public.group g ON g.id = s.group_id
+            WHERE s.type = 'S'
             """
             cursor.execute(select_query)
 

@@ -268,6 +268,7 @@ class AddTeacherWindow(QWidget):
                 s.last_name,
                 s.father_name
             FROM public.people s
+            WHERE s.type = 'T'
             """
             cursor.execute(select_query)
 
