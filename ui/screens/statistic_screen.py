@@ -1,20 +1,70 @@
 import psycopg2
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, QLineEdit
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QTableWidgetItem, QPushButton, QMessageBox, \
+    QLineEdit, QApplication
 
 
 class StatisticsWindow(QWidget):
     def __init__(self, parent):
         super().__init__()
-
         self.setWindowTitle('Статистика')
-        self.setGeometry(100, 100, 600, 400)
+        self.showMaximized()
 
         self.parent_window = parent
+
+        self.setStyleSheet("""
+             QWidget {
+                 background-color: #e0f7e7;  /* Бледно-зеленый цвет для фона всего окна */
+             }
+             QLabel {
+                 color: #333;  /* Темный цвет для текста */
+             }
+             QLineEdit {
+                 background-color: #ffffff;  /* Белый фон для полей ввода */
+                 border-radius: 5px;
+                 border: 1px solid #ccc;
+                 padding: 8px;
+             }
+             QPushButton {
+                 background-color: #66bb6a;  /* Зеленый фон для кнопок */
+                 color: white;
+                 font-size: 14px;
+                 padding: 10px;
+                 border-radius: 5px;
+                 border: none;
+             }
+             QPushButton:hover {
+                 background-color: #5cb85c;  /* При наведении кнопки темнеют */
+             }
+             QPushButton:pressed {
+                 background-color: #4cae4c;  /* При нажатии кнопки */
+             }
+             QTableWidget {
+                 background-color: #ffffff;  /* Белый фон для таблицы */
+                 border: 1px solid #ddd;  /* Светлый бордер для таблицы */
+             }
+         """)
 
         # Создание компоновки
         layout = QVBoxLayout()
 
+        button_style = """
+               QPushButton {
+                   background-color: #4CAF50;
+                   color: white;
+                   font-size: 14px;
+                   padding: 10px;
+                   border-radius: 5px;
+                   border: none;
+               }
+               QPushButton:hover {
+                   background-color: #45a049;
+               }
+               """
+
         self.label = QLabel("Просмотр статистики", self)
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setStyleSheet("font-size: 20px; font-weight: bold; color: #333; padding: 10px;")
 
         self.start_date = QLineEdit(self)
         self.start_date.setPlaceholderText('Начальный год')
@@ -23,21 +73,27 @@ class StatisticsWindow(QWidget):
         self.end_date.setPlaceholderText('Последний год')
 
         self.get_sub_button = QPushButton('Посмотреть средний балл по предметам за период', self)
+        self.get_sub_button.setStyleSheet(button_style)
         self.get_sub_button.clicked.connect(self.get_sub_with_date)
 
         self.get_stud_button = QPushButton('Посмотреть средний балл по студентам за период', self)
+        self.get_stud_button.setStyleSheet(button_style)
         self.get_stud_button.clicked.connect(self.get_stud_with_date)
 
         self.get_all_button = QPushButton('Посмотреть средний балл студентов по предметам за период', self)
+        self.get_all_button.setStyleSheet(button_style)
         self.get_all_button.clicked.connect(self.get_all_with_date)
 
         self.get_teacher_button = QPushButton('Посмотреть средний балл по преподавателям и предметам за период', self)
+        self.get_teacher_button.setStyleSheet(button_style)
         self.get_teacher_button.clicked.connect(self.get_avg_marks_by_subject_and_teacher)
 
         self.get_group_button = QPushButton('Посмотреть средний балл по группам за период', self)
+        self.get_group_button.setStyleSheet(button_style)
         self.get_group_button.clicked.connect(self.get_group_with_date)
 
         self.back_button = QPushButton('Назад', self)
+        self.back_button.setStyleSheet("background-color: #f44336; color: white; font-size: 14px; padding: 10px; border-radius: 5px;")
         self.back_button.clicked.connect(self.back_to_profile)
 
         layout.addWidget(self.label)
@@ -137,18 +193,24 @@ class StatisticsWindow(QWidget):
                     # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
+        table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 2)
+        table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 2)
+
         # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
+        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+
         # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
+        layout.addStretch(5)  # Это растягиваемое пространство
         layout.addWidget(close_button)
 
         # Устанавливаем layout для таблицы
         table.setLayout(layout)
-        table.resize(400, 300)
+        table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
 
     def _get_data_about_stud_from_db(self, procedure_name):
@@ -219,18 +281,25 @@ class StatisticsWindow(QWidget):
                     # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
+        table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 3)
+        table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 3)
+        table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 3)
+
         # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
+        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+
         # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
+        layout.addStretch(5)  # Это растягиваемое пространство
         layout.addWidget(close_button)
 
         # Устанавливаем layout для таблицы
         table.setLayout(layout)
-        table.resize(600, 400)
+        table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
 
     def _get_data_about_all_from_db(self, procedure_name):
@@ -301,18 +370,25 @@ class StatisticsWindow(QWidget):
                     # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
+        table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 4)
+        table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 4)
+        table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 4)
+        table.setColumnWidth(3, QApplication.primaryScreen().size().width() // 4)
         # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
+        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+
         # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
+        layout.addStretch(5)  # Это растягиваемое пространство
         layout.addWidget(close_button)
 
         # Устанавливаем layout для таблицы
         table.setLayout(layout)
-        table.resize(600, 400)
+        table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
 
     def get_avg_marks_by_subject_and_teacher(self):
@@ -390,18 +466,26 @@ class StatisticsWindow(QWidget):
                     # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
+        table.setColumnWidth(0, QApplication.primaryScreen().size().width() // 4)
+        table.setColumnWidth(1, QApplication.primaryScreen().size().width() // 4)
+        table.setColumnWidth(2, QApplication.primaryScreen().size().width() // 4)
+        table.setColumnWidth(3, QApplication.primaryScreen().size().width() // 4)
+
         # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
+        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+
         # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
+        layout.addStretch(5)  # Это растягиваемое пространство
         layout.addWidget(close_button)
 
         # Устанавливаем layout для таблицы
         table.setLayout(layout)
-        table.resize(600, 400)
+        table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
 
     def get_group_with_date(self):
@@ -476,17 +560,23 @@ class StatisticsWindow(QWidget):
                     # Преобразуем другие данные в строковый формат
                     table.setItem(row, col, QTableWidgetItem(str(item)))
 
+        table.setColumnWidth(0, QApplication.primaryScreen().size().width()//2)
+        table.setColumnWidth(1, QApplication.primaryScreen().size().width()//2)
+
         # Создаем кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
         close_button.clicked.connect(table.close)
 
+        close_button.setFixedHeight(40)  # Например, фиксируем высоту кнопки в 40 пикселей
+
         # Добавляем таблицу и кнопку на layout
         layout = QVBoxLayout(table)
         layout.addWidget(table)
+        layout.addStretch(5)  # Это растягиваемое пространство
         layout.addWidget(close_button)
 
         # Устанавливаем layout для таблицы
         table.setLayout(layout)
-        table.resize(400, 300)
+        table.resize(QApplication.primaryScreen().size().width(), 600)
         table.show()
 
