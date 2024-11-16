@@ -7,7 +7,7 @@ class TeacherProfileWindow(QWidget):
         self.setWindowTitle('Профиль Преподавателя')
         self.setGeometry(100, 100, 400, 300)
 
-        self.parent_window = parent  # Ссылка на родительское окно
+        self.parent_window = parent
 
         layout = QVBoxLayout()
 
@@ -16,13 +16,11 @@ class TeacherProfileWindow(QWidget):
             "Права:\n- Добавление студентов\n- Добавление оценок\n- Просмотр списка людей\n- Просмотр статистики", self
         )
 
-        # Кнопки для перехода в другие окна
         self.add_student_button = QPushButton('Добавить Студента', self)
         self.add_grade_button = QPushButton('Добавить Оценку', self)
         self.view_people_button = QPushButton('Посмотреть Студентов и Преподаваталей', self)
         self.statistics_button = QPushButton('Посмотреть Статистику', self)
 
-        # Кнопка "Назад"
         self.back_button = QPushButton('Выход', self)
         self.back_button.clicked.connect(self.back_to_profile)
 
@@ -36,41 +34,40 @@ class TeacherProfileWindow(QWidget):
 
         self.setLayout(layout)
 
-        # Обработчики кнопок
         self.add_student_button.clicked.connect(self.open_add_student)
         self.add_grade_button.clicked.connect(self.open_add_grade)
         self.view_people_button.clicked.connect(self.open_people)
         self.statistics_button.clicked.connect(self.open_statistics)
 
     def back_to_profile(self):
-        """Возврат в профиль преподавателя"""
-        self.parent_window.show()  # Показываем родительское окно (профиль преподавателя)
-        self.close()  # Закрываем текущее окно
+        """Возврат в профиль """
+        self.parent_window.show()
+        self.close()
 
     def open_add_student(self):
         """Открытие окна добавления студента"""
         from ui.screens.student_screen import AddStudentWindow
-        self.add_student_window = AddStudentWindow(self)  # Передаем родительское окно
+        self.add_student_window = AddStudentWindow(self)
         self.add_student_window.show()
-        self.close()  # Закрываем текущее окно
+        self.close()
 
     def open_add_grade(self):
         """Открытие окна добавления оценки"""
         from ui.screens.grade_screen import AddGradeWindow
-        self.add_grade_window = AddGradeWindow(self)  # Передаем родительское окно
+        self.add_grade_window = AddGradeWindow(self)
         self.add_grade_window.show()
-        self.close()  # Закрываем текущее окно
+        self.close()
 
     def open_people(self):
         """Открытие окна добавления студента"""
         from ui.view_people import ViewPeopleWindow
-        self.view_people = ViewPeopleWindow(self)  # Передаем родительское окно
+        self.view_people = ViewPeopleWindow(self)
         self.view_people.show()
-        self.close()  # Закрываем текущий экран
+        self.close()
 
     def open_statistics(self):
         """Открытие окна статистики"""
         from ui.statistics import StatisticsWindow
-        self.statistics_window = StatisticsWindow(self)  # Передаем родительское окно
+        self.statistics_window = StatisticsWindow(self)
         self.statistics_window.show()
-        self.close()  # Закрываем текущее окно
+        self.close()

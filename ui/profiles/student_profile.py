@@ -7,7 +7,7 @@ class StudentProfileWindow(QWidget):
         self.setWindowTitle('Профиль Студента')
         self.setGeometry(100, 100, 400, 300)
 
-        self.parent_window = parent  # Ссылка на родительское окно
+        self.parent_window = parent
 
         layout = QVBoxLayout()
 
@@ -16,12 +16,9 @@ class StudentProfileWindow(QWidget):
             "Права:\n- Просмотр списка студентов\n- Просмотр статистики", self
         )
 
-        # Кнопки для перехода в другие окна
-
         self.view_students_button = QPushButton('Посмотреть Студентов', self)
         self.statistics_button = QPushButton('Посмотреть Статистику', self)
 
-        # Кнопка "Назад"
         self.back_button = QPushButton('Выход', self)
         self.back_button.clicked.connect(self.back_to_profile)
 
@@ -33,14 +30,13 @@ class StudentProfileWindow(QWidget):
 
         self.setLayout(layout)
 
-        # Обработчики кнопок
         self.view_students_button.clicked.connect(self.open_view_students)
         self.statistics_button.clicked.connect(self.open_statistics)
 
     def back_to_profile(self):
-        """Возврат в профиль преподавателя"""
-        self.parent_window.show()  # Показываем родительское окно (профиль преподавателя)
-        self.close()  # Закрываем текущее окно
+        """Возврат в профиль """
+        self.parent_window.show()
+        self.close()
 
 
     def open_view_students(self):

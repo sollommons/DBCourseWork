@@ -35,7 +35,6 @@ class AuthWindow(QWidget):
 
         self.setLayout(main_layout)
 
-        # Конфигурация подключения к БД
         self.db_config = {
             'dbname': 'university',
             'user': 'postgres',
@@ -44,7 +43,6 @@ class AuthWindow(QWidget):
             'port': '5432'
         }
 
-        # Инициализируем переменную для окна профиля администратора
         self.admin_profile_window = None
         self.teacher_profile_window = None
         self.student_profile_window = None
@@ -53,7 +51,6 @@ class AuthWindow(QWidget):
         username = self.username_input.text()
         password = self.password_input.text()
 
-        # Логика аутентификации
         auth = AuthLogic(self.db_config)
         is_authenticated, role = auth.authenticate(username, password)
 
@@ -73,18 +70,18 @@ class AuthWindow(QWidget):
 
     def open_admin_profile(self):
         """Открытие профиля администратора"""
-        if self.admin_profile_window is None:  # Если окно профиля не открыто
+        if self.admin_profile_window is None:
             from ui.profiles.admin_profile import AdminProfileWindow
-            self.admin_profile_window = AdminProfileWindow(self)  # Передаем ссылку на родительское окно
-        self.close()  # Закрываем окно авторизации
-        self.admin_profile_window.show()  # Показываем окно профиля
+            self.admin_profile_window = AdminProfileWindow(self)
+        self.close()
+        self.admin_profile_window.show()
 
     def open_student_profile(self):
         """Открытие панели студента"""
         if self.student_profile_window is None:
             from ui.profiles.student_profile import StudentProfileWindow
             self.student_profile_window = StudentProfileWindow(self)
-        self.close()  # Закрываем окно авторизации
+        self.close()
         self.student_profile_window.show()
 
     def open_teacher_profile(self):
@@ -92,5 +89,5 @@ class AuthWindow(QWidget):
         if self.teacher_profile_window is None:
             from ui.profiles.teacher_profile import TeacherProfileWindow
             self.teacher_profile_window = TeacherProfileWindow(self)
-        self.close()  # Закрываем окно авторизации
+        self.close()
         self.teacher_profile_window.show()

@@ -7,10 +7,10 @@ class AddGroupWindow(QWidget):
     def __init__(self, parent):
         super().__init__()
 
-        self.setWindowTitle('Добавить группу')
+        self.setWindowTitle('Экран группы')
         self.setGeometry(100, 100, 400, 300)
 
-        self.parent_window = parent  # Ссылка на родительское окно
+        self.parent_window = parent
 
         layout = QVBoxLayout()
 
@@ -50,49 +50,41 @@ class AddGroupWindow(QWidget):
         self.setLayout(layout)
 
     def back_to_profile(self):
-        """Возврат в профиль администратора"""
-        self.parent_window.show()  # Показываем окно профиля
-        self.close()  # Закрываем текущее окно
+        """Возврат в профиль"""
+        self.parent_window.show()
+        self.close()
 
     def add_group_to_db(self):
         """Добавляет группу в базу данных."""
         group_name = self.group_name_input.text().strip()
 
-        # Проверяем, что название группы не пустое
         if not group_name:
             QMessageBox.warning(self, "Ошибка", "Название группы не может быть пустым.")
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
-                dbname="university",  # Замените на название вашей базы данных
-                user="postgres",  # Замените на ваше имя пользователя
-                password="s46825710",  # Замените на ваш пароль
-                host="localhost",  # Замените на хост, если нужно
-                port="5432"  # Порт по умолчанию для PostgreSQL
+                dbname="university",
+                user="postgres",
+                password="s46825710",
+                host="localhost",
+                port="5432"
             )
             cursor = connection.cursor()
 
-            # Подготовка SQL запроса для добавления новой группы
             insert_query = "INSERT INTO public.group (name) VALUES (%s)"
             cursor.execute(insert_query, (group_name,))
 
-            # Подтверждаем изменения в базе данных
             connection.commit()
 
-            # Закрываем курсор и соединение
             cursor.close()
             connection.close()
-
-            # Показываем сообщение об успехе
             QMessageBox.information(self, "Успех", f"Группа '{group_name}' успешно добавлена.")
 
             # Очищаем поле ввода
             self.group_name_input.clear()
 
         except Exception as e:
-            # В случае ошибки выводим сообщение
             QMessageBox.critical(self, "Ошибка", f"Не удалось добавить группу: {str(e)}")
         finally:
             if cursor:
@@ -107,13 +99,11 @@ class AddGroupWindow(QWidget):
         old_group_name = self.old_group_name_input.text().strip()
         new_group_name = self.group_name_input.text().strip()
 
-        # Проверяем, что имена групп не пустые
         if not old_group_name or not new_group_name:
             QMessageBox.warning(self, "Ошибка", "Названия групп не могут быть пустыми.")
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
                 dbname="university",  # Замените на название вашей базы данных
                 user="postgres",  # Замените на ваше имя пользователя
@@ -123,29 +113,27 @@ class AddGroupWindow(QWidget):
             )
             cursor = connection.cursor()
 
-            # SQL запрос для обновления группы
             update_query = """
                     UPDATE public.group
                     SET name = (%s)
                     WHERE name = (%s);
                 """
 
-            # Выполнение запроса с параметрами
             cursor.execute(update_query, (new_group_name, old_group_name))
 
-            # Подтверждаем изменения в базе данных
             connection.commit()
 
-            # Проверка количества изменённых строк
             if cursor.rowcount == 0:
                 QMessageBox.information(self, "Информация", f"Группы с именем '{old_group_name}' не найдены.")
             else:
                 QMessageBox.information(self, "Успех",
                                         f"Группа успешно изменена с '{old_group_name}' на '{new_group_name}'.")
 
-            # Закрываем курсор и соединение
             cursor.close()
             connection.close()
+
+            self.group_name_input.clear()
+            self.old_group_name_input.clear()
 
         except Exception as e:
             import traceback
@@ -161,40 +149,35 @@ class AddGroupWindow(QWidget):
         """Удаляет группу из базы данных."""
         old_group_name = self.old_group_name_input.text().strip()
 
-        # Проверяем, что название группы не пустое
         if not old_group_name:
             QMessageBox.warning(self, "Ошибка", "Название группы не может быть пустым.")
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
-                dbname="university",  # Замените на название вашей базы данных
-                user="postgres",  # Замените на ваше имя пользователя
-                password="s46825710",  # Замените на ваш пароль
-                host="localhost",  # Замените на хост, если нужно
-                port="5432"  # Порт по умолчанию для PostgreSQL
+                dbname="university",
+                user="postgres",
+                password="s46825710",
+                host="localhost",
+                port="5432"
             )
             cursor = connection.cursor()
 
-            # SQL запрос для удаления группы
             delete_query = "DELETE FROM public.group WHERE name = %s"
 
-            # Выполнение запроса
             cursor.execute(delete_query, (old_group_name,))
 
-            # Подтверждаем изменения в базе данных
             connection.commit()
 
-            # Проверяем, была ли удалена группа
             if cursor.rowcount == 0:
                 QMessageBox.information(self, "Информация", f"Группа '{old_group_name}' не найдена.")
             else:
                 QMessageBox.information(self, "Успех", f"Группа '{old_group_name}' успешно удалена.")
 
-            # Закрываем курсор и соединение
             cursor.close()
             connection.close()
+
+            self.old_group_name_input.clear()
 
         except Exception as e:
             import traceback
@@ -210,38 +193,32 @@ class AddGroupWindow(QWidget):
     def get_all_groups(self):
         """Возвращает все группы и их ID из базы данных."""
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
-                dbname="university",  # Замените на название вашей базы данных
-                user="postgres",  # Замените на ваше имя пользователя
-                password="s46825710",  # Замените на ваш пароль
-                host="localhost",  # Замените на хост, если нужно
-                port="5432"  # Порт по умолчанию для PostgreSQL
+                dbname="university",
+                user="postgres",
+                password="s46825710",
+                host="localhost",
+                port="5432"
             )
             cursor = connection.cursor()
 
-            # SQL запрос для получения всех групп
             select_query = "SELECT id, name FROM public.group"
             cursor.execute(select_query)
 
-            # Извлекаем все строки результата
             groups = cursor.fetchall()
 
-            # Проверяем, есть ли группы
             if not groups:
                 QMessageBox.information(self, "Информация", "Группы не найдены.")
                 return
 
-            # Если необходимо отобразить группы в таблице
             self.show_groups_in_table(groups)
 
-            # Закрываем курсор и соединение
             cursor.close()
             connection.close()
 
         except Exception as e:
             import traceback
-            traceback.print_exc()  # Выводим стек ошибки
+            traceback.print_exc()
             QMessageBox.critical(self, "Ошибка", f"Не удалось получить группы: {str(e)}")
         finally:
             if cursor:
@@ -251,30 +228,24 @@ class AddGroupWindow(QWidget):
 
     def show_groups_in_table(self, groups):
         """Отображает группы в таблице."""
-        # Создаём таблицу с двумя столбцами: ID и Name
         table = QTableWidget(self)
-        table.setRowCount(len(groups))  # Строки для каждой группы
-        table.setColumnCount(2)  # Столбцы для ID и Name
+        table.setRowCount(len(groups))
+        table.setColumnCount(2)
         table.setHorizontalHeaderLabels(['ID', 'Название'])
         table.setEditTriggers(QTableWidget.NoEditTriggers)
 
-        # Заполняем таблицу данными
         for row, group in enumerate(groups):
-            table.setItem(row, 0, QTableWidgetItem(str(group[0])))  # ID
-            table.setItem(row, 1, QTableWidgetItem(group[1]))  # Название
+            table.setItem(row, 0, QTableWidgetItem(str(group[0])))
+            table.setItem(row, 1, QTableWidgetItem(group[1]))
 
-        # Создаём кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
-        close_button.clicked.connect(table.close)  # Закрытие окна при нажатии на кнопку
+        close_button.clicked.connect(table.close)
 
-        # Создаём layout и добавляем таблицу и кнопку
         layout = QVBoxLayout(table)
         layout.addWidget(table)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для окна
         table.setLayout(layout)
 
-        # Отображаем таблицу в окне
         table.resize(400, 300)
         table.show()

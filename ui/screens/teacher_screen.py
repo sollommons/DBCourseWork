@@ -6,10 +6,10 @@ class AddTeacherWindow(QWidget):
     def __init__(self, parent):
         super().__init__()
 
-        self.setWindowTitle('Добавить преподавателя')
+        self.setWindowTitle('Экран преподавателя')
         self.setGeometry(100, 100, 400, 300)
 
-        self.parent_window = parent  # Ссылка на родительское окно
+        self.parent_window = parent
 
         layout = QVBoxLayout()
 
@@ -65,8 +65,8 @@ class AddTeacherWindow(QWidget):
 
     def back_to_profile(self):
         """Возврат в профиль"""
-        self.parent_window.show()  # Показываем окно профиля
-        self.close()  # Закрываем текущее окно
+        self.parent_window.show()
+        self.close()
 
     def add_teacher_to_db(self):
         """Добавляет преподавателя в базу данных."""
@@ -74,7 +74,6 @@ class AddTeacherWindow(QWidget):
         teacher_last_name = self.last_name_input.text().strip()
         teacher_father_name = self.father_name_input.text().strip()
 
-        # Проверяем, что название группы не пустое
         if not teacher_name:
             QMessageBox.warning(self, "Ошибка", "Имя не может быть пустым.")
             return
@@ -83,40 +82,33 @@ class AddTeacherWindow(QWidget):
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
-                dbname="university",  # Замените на название вашей базы данных
-                user="postgres",  # Замените на ваше имя пользователя
-                password="s46825710",  # Замените на ваш пароль
-                host="localhost",  # Замените на хост, если нужно
-                port="5432"  # Порт по умолчанию для PostgreSQL
+                dbname="university",
+                user="postgres",
+                password="s46825710",
+                host="localhost",
+                port="5432"
             )
             cursor = connection.cursor()
 
-            # Подготовка SQL запроса для добавления нового преподавателя
             insert_query = """INSERT INTO public.people (first_name, last_name, father_name, group_id, type)
             VALUES 
             ((%s), (%s), (%s), null, 'T') 
             """
             cursor.execute(insert_query, (teacher_name, teacher_last_name,teacher_father_name,))
 
-            # Подтверждаем изменения в базе данных
             connection.commit()
 
-            # Закрываем курсор и соединение
             cursor.close()
             connection.close()
 
-            # Показываем сообщение об успехе
             QMessageBox.information(self, "Успех", f"Преподаватель '{teacher_name}' успешно добавлен.")
 
-            # Очищаем поле ввода
             self.first_name_input.clear()
             self.last_name_input.clear()
             self.father_name_input.clear()
 
         except Exception as e:
-            # В случае ошибки выводим сообщение
             QMessageBox.critical(self, "Ошибка", f"Не удалось добавить преподавателя: {str(e)}")
         finally:
             if cursor:
@@ -133,7 +125,6 @@ class AddTeacherWindow(QWidget):
         old_last_name = self.old_last_name_input.text().strip()
         old_father_name = self.old_father_name_input.text().strip()
 
-        # Проверяем, что название группы не пустое
         if not teacher_name:
             QMessageBox.warning(self, "Ошибка", "Имя не может быть пустым.")
             return
@@ -148,16 +139,14 @@ class AddTeacherWindow(QWidget):
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
-                dbname="university",  # Замените на название вашей базы данных
-                user="postgres",  # Замените на ваше имя пользователя
-                password="s46825710",  # Замените на ваш пароль
-                host="localhost",  # Замените на хост, если нужно
-                port="5432"  # Порт по умолчанию для PostgreSQL
+                dbname="university",
+                user="postgres",
+                password="s46825710",
+                host="localhost",
+                port="5432"
             )
             cursor = connection.cursor()
-            # Подготовка SQL запроса для добавления нового предмета
             insert_query = """UPDATE public.people 
               SET first_name = (%s),
                   last_name = (%s),
@@ -166,17 +155,13 @@ class AddTeacherWindow(QWidget):
             """
             cursor.execute(insert_query, (teacher_name, teacher_last_name, teacher_father_name, old_name, old_last_name,))
 
-            # Подтверждаем изменения в базе данных
             connection.commit()
 
-            # Закрываем курсор и соединение
             cursor.close()
             connection.close()
 
-            # Показываем сообщение об успехе
             QMessageBox.information(self, "Успех", f"Преподаватель '{teacher_name}' успешно изменен.")
 
-            # Очищаем поле ввода
             self.first_name_input.clear()
             self.last_name_input.clear()
             self.father_name_input.clear()
@@ -185,7 +170,6 @@ class AddTeacherWindow(QWidget):
             self.old_father_name_input.clear()
 
         except Exception as e:
-            # В случае ошибки выводим сообщение
             QMessageBox.critical(self, "Ошибка", f"Не удалось изменить преподавтеля: {str(e)}")
         finally:
             if cursor:
@@ -199,7 +183,6 @@ class AddTeacherWindow(QWidget):
         teacher_last_name = self.old_last_name_input.text().strip()
         teacher_father_name = self.old_father_name_input.text().strip()
 
-        # Проверяем, что название группы не пустое
         if not teacher_name:
             QMessageBox.warning(self, "Ошибка", "Имя не может быть пустым.")
             return
@@ -208,39 +191,32 @@ class AddTeacherWindow(QWidget):
             return
 
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
-                dbname="university",  # Замените на название вашей базы данных
-                user="postgres",  # Замените на ваше имя пользователя
-                password="s46825710",  # Замените на ваш пароль
-                host="localhost",  # Замените на хост, если нужно
-                port="5432"  # Порт по умолчанию для PostgreSQL
+                dbname="university",
+                user="postgres",
+                password="s46825710",
+                host="localhost",
+                port="5432"
             )
             cursor = connection.cursor()
 
-            # Подготовка SQL запроса для добавления нового предмета
             insert_query = """DELETE FROM public.people 
                 WHERE first_name = (%s) AND last_name = (%s)
              """
             cursor.execute(insert_query, (teacher_name, teacher_last_name))
 
-            # Подтверждаем изменения в базе данных
             connection.commit()
 
-            # Закрываем курсор и соединение
             cursor.close()
             connection.close()
 
-            # Показываем сообщение об успехе
             QMessageBox.information(self, "Успех", f"Преподавель '{teacher_name}' успешно удален.")
 
-            # Очищаем поле ввода
             self.old_first_name_input.clear()
             self.old_last_name_input.clear()
             self.old_father_name_input.clear()
 
         except Exception as e:
-            # В случае ошибки выводим сообщение
             QMessageBox.critical(self, "Ошибка", f"Не удалось удалить преподавтеля: {str(e)}")
         finally:
             if cursor:
@@ -249,19 +225,17 @@ class AddTeacherWindow(QWidget):
                 connection.close()
 
     def get_all_teachers(self):
-        """Возвращает всех студентов и их ID из базы данных."""
+        """Возвращает всех преподавателей и из базы данных."""
         try:
-            # Подключение к базе данных
             connection = psycopg2.connect(
-                dbname="university",  # Замените на название вашей базы данных
-                user="postgres",  # Замените на ваше имя пользователя
-                password="s46825710",  # Замените на ваш пароль
-                host="localhost",  # Замените на хост, если нужно
-                port="5432"  # Порт по умолчанию для PostgreSQL
+                dbname="university",
+                user="postgres",
+                password="s46825710",
+                host="localhost",
+                port="5432"
             )
             cursor = connection.cursor()
 
-            # SQL запрос для получения всех предметов
             select_query = """SELECT 
                 s.id,
                 s.first_name,
@@ -272,24 +246,20 @@ class AddTeacherWindow(QWidget):
             """
             cursor.execute(select_query)
 
-            # Извлекаем все строки результата
             teachers = cursor.fetchall()
 
-            # Проверяем, есть ли предметы
             if not teachers:
                 QMessageBox.information(self, "Информация", "Преподаватели не найдены.")
                 return
 
-            # Если необходимо отобразить группы в таблице
             self.show_teachers_in_table(teachers)
 
-            # Закрываем курсор и соединение
             cursor.close()
             connection.close()
 
         except Exception as e:
             import traceback
-            traceback.print_exc()  # Выводим стек ошибки
+            traceback.print_exc()
             QMessageBox.critical(self, "Ошибка", f"Не удалось получить преподавателей: {str(e)}")
         finally:
             if cursor:
@@ -298,34 +268,27 @@ class AddTeacherWindow(QWidget):
                 connection.close()
 
     def show_teachers_in_table(self, teachers):
-        """Отображает предметы в таблице."""
-        # Создаём таблицу с двумя столбцами: ID и Name
+        """Отображает преподавателей в таблице."""
         table = QTableWidget(self)
-        table.setRowCount(len(teachers))  # Строки для каждого предмета
-        table.setColumnCount(4)  # Столбцы для ID и Name
+        table.setRowCount(len(teachers))
+        table.setColumnCount(4)
         table.setHorizontalHeaderLabels(['ID', 'Имя', 'Фамилия', 'Отчество'])
         table.setEditTriggers(QTableWidget.NoEditTriggers)
 
-        # Заполняем таблицу данными
         for row, subject in enumerate(teachers):
-            table.setItem(row, 0, QTableWidgetItem(str(subject[0])))  # ID
-            table.setItem(row, 1, QTableWidgetItem(subject[1]))  # Имя
-            table.setItem(row, 2, QTableWidgetItem(subject[2]))  # Фамилия
-            table.setItem(row, 3, QTableWidgetItem(subject[3]))  # Отчество
+            table.setItem(row, 0, QTableWidgetItem(str(subject[0])))
+            table.setItem(row, 1, QTableWidgetItem(subject[1]))
+            table.setItem(row, 2, QTableWidgetItem(subject[2]))
+            table.setItem(row, 3, QTableWidgetItem(subject[3]))
 
-
-        # Создаём кнопку для закрытия таблицы
         close_button = QPushButton('Закрыть', table)
-        close_button.clicked.connect(table.close)  # Закрытие окна при нажатии на кнопку
+        close_button.clicked.connect(table.close)
 
-        # Создаём layout и добавляем таблицу и кнопку
         layout = QVBoxLayout(table)
         layout.addWidget(table)
         layout.addWidget(close_button)
 
-        # Устанавливаем layout для окна
         table.setLayout(layout)
 
-        # Отображаем таблицу в окне
         table.resize(400, 300)
         table.show()

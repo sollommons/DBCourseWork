@@ -4,8 +4,8 @@ from ui.auth_window import AuthWindow
 
 def main():
     app = QApplication(sys.argv)
-    auth_window = AuthWindow()  # Создаем окно авторизации
-    auth_window.show()  # Показываем окно авторизации
+    auth_window = AuthWindow()
+    auth_window.show()
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
