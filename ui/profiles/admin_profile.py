@@ -21,7 +21,6 @@ class AdminProfileWindow(QWidget):
         self.add_group_button = QPushButton('Добавить Группу', self)
         self.add_sub_button = QPushButton('Добавить предмет', self)
         self.add_grade_button = QPushButton('Добавить Оценку', self)
-        self.people_button = QPushButton('Посмотреть студентов и преподавателей', self)
         self.statistics_button = QPushButton('Посмотреть Статистику', self)
 
         self.back_button = QPushButton('Выход', self)
@@ -34,7 +33,6 @@ class AdminProfileWindow(QWidget):
         layout.addWidget(self.add_group_button)
         layout.addWidget(self.add_grade_button)
         layout.addWidget(self.add_sub_button)
-        layout.addWidget(self.people_button)
         layout.addWidget(self.statistics_button)
         layout.addWidget(self.back_button)
 
@@ -45,7 +43,6 @@ class AdminProfileWindow(QWidget):
         self.add_group_button.clicked.connect(self.open_add_group)
         self.add_grade_button.clicked.connect(self.open_add_grade)
         self.add_sub_button.clicked.connect(self.open_add_sub)
-        self.people_button.clicked.connect(self.open_people)
         self.statistics_button.clicked.connect(self.open_statistics)
 
     def back_to_profile(self):
@@ -88,16 +85,9 @@ class AdminProfileWindow(QWidget):
         self.add_grade_window.show()
         self.close()
 
-    def open_people(self):
-        """Открытие окна добавления студента"""
-        from ui.view_people import ViewPeopleWindow
-        self.view_people = ViewPeopleWindow(self)
-        self.view_people.show()
-        self.close()
-
     def open_statistics(self):
         """Открытие окна статистики"""
-        from ui.statistics import StatisticsWindow
+        from ui.screens.statistic_screen import StatisticsWindow
         self.statistics_window = StatisticsWindow(self)
         self.statistics_window.show()
         self.close()

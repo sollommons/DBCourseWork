@@ -67,7 +67,7 @@ class TeacherProfileWindow(QWidget):
 
     def open_statistics(self):
         """Открытие окна статистики"""
-        from ui.statistics import StatisticsWindow
+        from ui.screens.statistic_screen import StatisticsWindow
         self.statistics_window = StatisticsWindow(self)
         self.statistics_window.show()
         self.close()
